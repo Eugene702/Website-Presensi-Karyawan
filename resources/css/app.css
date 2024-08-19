@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-button{
+    background: linear-gradient(45deg, #E51B70 0%, #F04E35 100%);
+}
+@layer utilities {
+    .bg-custom-gradient {
+        background: linear-gradient(45deg, #E51B70 0%, #F04E35 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
