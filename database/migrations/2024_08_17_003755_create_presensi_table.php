@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->timestamp('clock_in')->nullable();
             $table->timestamp('clock_out')->nullable();
+            $table->date('lokasi')->nullable(); // Assuming 'lokasi' is a date field
+            $table->date('foto_lokasi')->nullable(); // Assuming 'foto_lokasi' is a date field
             $table->string('status')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();

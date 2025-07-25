@@ -1,1 +1,1 @@
-<img src="{{ asset('/image/FHCI_logo.png') }}" alt="FHCI Logo" class="w-32">
+<img src="{{ asset('/image/logo.jpg') }}" alt="FHCI Logo" class="w-32">

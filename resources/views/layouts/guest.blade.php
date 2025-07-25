@@ -17,7 +17,7 @@
     <body class="font-sans  antialiased">
     <div class="flex justify-center bg-white absolute w-full  " >
         <a href="/" wire:navigate class="py-3 ">
-        <img src="{{ asset('/image/FHCI_logo.png') }}" alt="FHCI Logo" class="w-20">
+        <img src="{{ asset('/image/logo.jpg') }}" alt="FHCI Logo" class="w-20">
         </a>
     </div>
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 ">

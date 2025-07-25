@@ -11,10 +11,10 @@
 <body class="bg-gray-100 shadow flex flex-col min-h-screen">
     <header class="flex justify-between items-center p-6 bg-white shadow-md">
         <!-- Teks yang muncul di mobile -->
-        <h1 class="text-lg md:text-2xl font-bold bg-custom-gradient block md:hidden">FHCI</h1>
+        <h1 class="text-lg md:text-2xl font-bold bg-custom-gradient block md:hidden">KKN MAHASISWA UNIVERSITAS LAMPUNG</h1>
 
         <!-- Teks yang muncul di layar yang lebih besar dari mobile -->
-        <h1 class="text-lg md:text-2xl font-bold bg-custom-gradient hidden md:block">FORUM HUMAN CAPITAL INDONESIA</h1>
+        <h1 class="text-lg md:text-2xl font-bold bg-custom-gradient hidden md:block">KKN MAHASISWA UNIVERSITAS LAMPUNG</h1>
 
 
         <div class="font-medium bg-custom-gradient">
@@ -26,8 +26,8 @@
 
     <main class="mx-auto flex-grow px-4 flex items-center justify-center">
         <div class="flex items-center justify-center flex-col space-y-4 text-center">
-            <h2 class="text-2xl text-gray-800 font-bold">Website Presensi Karyawan FHCI</h2>
-            <img src="{{ asset('/image/FHCI_logo.png') }}" alt="FHCI Logo" class="w-64 md:w-96">
+            <h2 class="text-2xl text-gray-800 font-bold">Presensi KKN Mahasiswa Universitas Lampung</h2>
+            <img src="{{ asset('/image/logo.jpg') }}" alt="FHCI Logo" class="w-64 md:w-96">
         </div>
     </main>
 </body>
