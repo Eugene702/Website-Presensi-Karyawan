@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\Auth; // Add this line
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [PresensiController::class, 'index'])->name('dashboard');
-    Route::get('/clock-in', [PresensiController::class, 'clockIn'])->name('presensi.clockIn');
+    Route::post('/clock-in', [PresensiController::class, 'clockIn'])->name('presensi.clockIn');
     Route::get('/clock-out', [PresensiController::class, 'clockOut'])->name('presensi.clockOut');
     Route::get('/presensi/izin', [PresensiController::class, 'izinForm'])->name('presensi.izinForm');
     Route::post('/presensi/izin', [PresensiController::class, 'izinSubmit'])->name('presensi.izinSubmit');
     Route::get('/presensi/riwayat', [PresensiController::class, 'riwayat'])->name('presensi.riwayat');
+    Route::get('/presensi/rekap/pdf', [PresensiController::class, 'generateRekapPDF'])->name('presensi.rekap.pdf');
 
 });
 

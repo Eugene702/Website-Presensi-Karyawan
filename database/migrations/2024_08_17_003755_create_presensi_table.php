@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,17 +12,16 @@ return new class extends Migration
     {
         Schema::create('presensis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('clock_in')->nullable();
             $table->timestamp('clock_out')->nullable();
-            $table->date('lokasi')->nullable(); // Assuming 'lokasi' is a date field
-            $table->date('foto_lokasi')->nullable(); // Assuming 'foto_lokasi' is a date field
+            $table->string('lokasi')->nullable(); // UBAH: dari date() menjadi string()
+            $table->string('foto_lokasi')->nullable(); // UBAH: dari date() menjadi string()
             $table->string('status')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();
 
             // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
