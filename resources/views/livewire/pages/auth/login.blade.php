@@ -39,7 +39,7 @@ $login = function () {
             <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
         </a>
     </div>
-    <P class="bg-custom-gradient text-xl text-center font-extrabold my-5 mb-10"> Selangkah Lebih Dekat Dengan Suksesmu</P>
+    <P class="text-lime-800 text-xl text-center font-extrabold my-5 mb-10"> Selangkah Lebih Dekat Dengan Suksesmu</P>
 
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -70,11 +70,11 @@ $login = function () {
         <div class="flex items-center justify-end mt-4">
 
 
-            <x-primary-button class=" bg-button w-full r">
+            <x-primary-button class=" bg-button w-full ">
                 <p class="mx-auto text-white my-2 font-extrabold ">Masuk <span class="hidden">{{ __('Log in') }}</span></p>
             </x-primary-button>
         </div>
     </form>
-    <p class="text-center mt-3 text-black">Belum ada akun ? <a href="{{ route('register') }}" class="bg-custom-gradient"> Daftar disini <span class="hidden">{{ __('Register') }}</span></a></p>
-   
+    <p class="text-center mt-3 text-black">Belum ada akun ? <a href="{{ route('register') }}" class="text-lime-800 text-lg font-bold"> Daftar disini <span class="hidden">{{ __('Register') }}</span></a></p>
+
 </div>

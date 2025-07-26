@@ -1,4 +1,43 @@
 <x-app-layout>
+
+    {{-- CSS Kustom untuk membuat tabel riwayat menjadi responsif di mobile --}}
+    <style>
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+
+            .responsive-table tr {
+                display: block;
+                border: 1px solid #e2e8f0;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            }
+
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #edf2f7;
+                text-align: right;
+            }
+
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
+
+            .responsive-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                text-align: left;
+                padding-right: 1rem;
+                color: #4a5568;
+                /* Warna label */
+            }
+        }
+    </style>
     <div class="container mx-auto flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 text-gray-950">
         <!-- Panel Kiri: Profil Pengguna dan Presensi -->
         <div class="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
@@ -248,33 +287,6 @@
                         }
                     </script>
 
-                    {{-- <form method="GET" action="{{ route('presensi.clockIn') }}" class="">
-                        @csrf
-                        <button type="submit"
-                            class="{{ $hasClockedIn ? 'bg-gray-300 text-gray-500' : 'bg-red-500 text-white' }} py-1 sm:py-2 px-4 sm:px-6 rounded-lg flex items-center space-x-2  "
-                            {{ $hasClockedIn ? 'disabled' : '' }}>
-                            <i data-feather="log-in"></i>
-                            <div class="flex flex-col">
-                                <p class="text-sm sm:text-base">Check-In</p>
-                                <p class="text-xs sm:text-sm">{{ $todayPresensi && $todayPresensi->clock_in ?
-                                    $todayPresensi->clock_in->format('H:i:s') : '-' }}</p>
-                            </div>
-                        </button>
-                    </form> --}}
-
-                    <!-- Tombol Check-Out -->
-                    {{-- <form method="GET" action="{{ route('presensi.clockOut') }}" class="">
-                        @csrf
-                        <button type="submit"
-                            class="{{ $hasClockedOut || !$hasClockedIn ? 'bg-gray-300 text-gray-500' : 'bg-red-500 text-white' }} py-1 sm:py-2 px-4 sm:px-6 rounded-lg flex items-center space-x-2"
-                            {{ $hasClockedOut || !$hasClockedIn ? 'disabled' : '' }}>
-                            <i data-feather="log-out"></i>
-                            <div class="flex flex-col">
-                                <p class="text-sm sm:text-base">Check-Out</p>
-                                <p class="text-xs sm:text-sm">{{ $todayPresensi && $todayPresensi->clock_out ?
-                                    $todayPresensi->clock_out->format('H:i:s') : '-' }}</p>
-                            </div>
-                        </button> --}}
                     </form>
                 </div>
 
@@ -286,7 +298,7 @@
                 </div>
                 <dialog id="my_modal_4" class="modal bg-gray-500 bg-opacity-50 backdrop-blur-md">
                     <div class="modal-box w-11/12 max-w-5xl bg-white">
-                        <h2 class="text-2xl font-bold mb-4">Lapor Presensi Forum Human Capital Indonesia</h2>
+                        <h2 class="text-2xl font-bold mb-4">Lapor Presensi KKN Universitas Lampung</h2>
 
                         {{-- PENTING: Tambahkan enctype untuk upload file --}}
                         <form method="POST" action="{{ route('presensi.izinSubmit') }}" enctype="multipart/form-data">
@@ -317,10 +329,10 @@
                             </div>
                             <div class="flex justify-between">
                                 <button
-                                    class="btn px-4 py-2 rounded bg-gradient-to-r from-pink-300 to-red-300 border-none text-red-500 font-bold"
+                                    class="btn px-4 py-2 rounded bg-sky-600 border-none text-white font-bold"
                                     type="button" onclick="my_modal_4.close()">Batal</button>
                                 <button type="submit"
-                                    class="bg-red-500 btn text-white px-4 py-2 rounded border-none hover:bg-pink-300">Submit</button>
+                                    class="bg-lime-800 btn text-white px-4 py-2 rounded border-none hover:bg-pink-300">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -330,34 +342,23 @@
 
 
         <!-- Panel Kanan: Riwayat Presensi -->
-        <div x-data="{ isImageModalOpen: false, modalImageUrl: '' }" class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md hidden md:block">
-
-            {{-- Letakkan kode ini setelah </table>, tapi sebelum </div> penutup utama --}}
-<div x-show="isImageModalOpen" 
-     @keydown.escape.window="isImageModalOpen = false"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 transition-opacity"
-     style="display: none;">
-
-    <div @click.away="isImageModalOpen = false" class="relative bg-white p-4 rounded-lg shadow-lg max-w-3xl max-h-[90vh]">
-        
-        <button @click="isImageModalOpen = false" class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold z-10">&times;</button>
-        
-        <img :src="modalImageUrl" alt="Tampilan Penuh" class="object-contain max-w-full max-h-[85vh]">
-    </div>
-</div>
-
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold">Riwayat Presensi</h2>
-                {{-- TOMBOL EXPORT PDF --}}
+        <!-- Panel Kanan: Riwayat Presensi (Sudah Responsif) -->
+        <div x-data="{ isImageModalOpen: false, modalImageUrl: '' }"
+            class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md">
+            <div
+                class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-2 sm:space-y-0">
+                <h2 class="text-2xl font-bold">Riwayat Presensi Saya</h2>
                 <a href="{{ route('presensi.rekap.pdf') }}"
-                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center w-full sm:w-auto justify-center">
                     <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                         <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
                     </svg>
                     <span>Export ke PDF</span>
                 </a>
             </div>
-            <table class="table-auto w-full text-left">
+
+            {{-- SATU TABEL UNTUK SEMUA UKURAN LAYAR --}}
+            <table class="w-full text-left responsive-table">
                 <thead>
                     <tr>
                         <th class="px-4 py-2">No</th>
@@ -365,78 +366,89 @@
                         <th class="px-4 py-2">Nama</th>
                         <th class="px-4 py-2">Lokasi</th>
                         <th class="px-4 py-2">Tanggal</th>
-                        <th class="px-4 py-2">Waktu Check In</th>
-                        {{-- <th class="px-4 py-2">Waktu Check Out</th> --}}
+                        <th class="px-4 py-2">Check In</th>
                         <th class="px-4 py-2">Status</th>
                         <th class="px-4 py-2">Alasan</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($presensi as $index => $item)
+                    @forelse ($presensi as $item)
                         <tr class="border-b">
-                            <td class="px-4 py-2">{{ $index + 1 }}</td>
-                            {{-- Di dalam @foreach loop --}}
-                            <td class="px-4 py-2">
+                            <td data-label="No">{{ $loop->iteration }}</td>
+                            <td data-label="Foto">
                                 @php
                                     $fotoPath = $item->foto_lokasi ? str_replace('public/', '', $item->foto_lokasi) : null;
                                 @endphp
                                 @if ($fotoPath)
-                                    {{-- Buat gambar bisa diklik --}}
                                     <button type="button"
                                         @click="isImageModalOpen = true; modalImageUrl = '{{ asset('storage/' . $fotoPath) }}'">
                                         <img src="{{ asset('storage/' . $fotoPath) }}" alt="Foto Lokasi"
-                                            class="rounded-full w-10 h-10 object-cover cursor-pointer hover:opacity-80 transition">
+                                            class="rounded-full w-10 h-10 object-cover cursor-pointer hover:opacity-80 transition ml-auto">
                                     </button>
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td class="px-4 py-2">{{ $item->user->name }}</td>
-                            <td class="px-4 py-2">{{ $item->lokasi }}</td>
-                            <td class="px-4 py-2">{{ $item->created_at->format('d M Y') }}</td>
-                            <td class="px-4 py-2">{{ $item->clock_in ? $item->clock_in->format('H:i:s') : '-' }}</td>
-                            {{-- <td class="px-4 py-2">{{ $item->clock_out ? $item->clock_out->format('H:i:s') : '-' }}</td>
-                            --}}
-                            <td class="px-4 py-2">{{ $item->status }}</td>
-                            <td class="px-4 py-2">{{ $item->catatan ? $item->catatan : '-' }}</td>
+                            <td data-label="Nama">{{ $item->user->name }}</td>
+                            <td data-label="Lokasi">{{ $item->lokasi }}</td>
+                            <td data-label="Tanggal">{{ $item->created_at->format('d M Y') }}</td>
+                            <td data-label="Check In">{{ $item->clock_in ? $item->clock_in->format('H:i:s') : '-' }}</td>
+                            <td data-label="Status">{{ $item->status }}</td>
+                            <td data-label="Alasan">{{ $item->catatan ? $item->catatan : '-' }}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-4">Anda belum memiliki riwayat presensi.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
+
+            <!-- Modal untuk Tampilan Gambar (tidak berubah) -->
+            <div x-show="isImageModalOpen" @keydown.escape.window="isImageModalOpen = false"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+                style="display: none;">
+                <div @click.away="isImageModalOpen = false"
+                    class="relative bg-white p-4 rounded-lg shadow-lg max-w-3xl max-h-[90vh]">
+                    <button @click="isImageModalOpen = false"
+                        class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold z-10">&times;</button>
+                    <img :src="modalImageUrl" alt="Tampilan Penuh" class="object-contain max-w-full max-h-[85vh]">
+                </div>
+            </div>
         </div>
+    </div>
 
 
-        <div 
-            class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md  md:hidden">
-            <h2 class="text-2xl font-bold mb-4">Riwayat Presensi</h2>
-            <table class="table-auto w-full text-left">
-                <thead>
-                    <tr>
-                        <th class=" py-2">No</th>
-                        <th class="px-4 py-2">Tanggal</th>
-                        <th class="px-4 py-2">Waktu </th>
+    {{-- <div class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md  md:hidden">
+        <h2 class="text-2xl font-bold mb-4">Riwayat Presensi</h2>
+        <table class="table-auto w-full text-left">
+            <thead>
+                <tr>
+                    <th class=" py-2">No</th>
+                    <th class="px-4 py-2">Tanggal</th>
+                    <th class="px-4 py-2">Waktu </th>
 
-                        <th class="px-4 py-2">Status</th>
-                        <th class="px-4 py-2">Alasan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($presensi as $index => $item)
-                        <tr class="border-b">
-                            <td class=" py-2">{{ $index + 1 }}</td>
-                            <td class="px-4 py-2">{{ $item->created_at->format('d M Y') }}</td>
-                            <td class="px-4 py-2"> <span class="btn btn-sm bg-green-400 text-gray-950 my-1">
-                                    {{ $item->clock_in ? $item->clock_in->format('H:i:s') : '-' }} </span>
-                                <span
-                                    class="btn btn-sm  bg-button text-white">{{ $item->clock_out ? $item->clock_out->format('H:i:s') : '-' }}</span>
-                            </td>
-                            <td class="px-4 py-2">{{ $item->status }}</td>
-                            <td class="px-4 py-2">{{ $item->catatan }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                    <th class="px-4 py-2">Status</th>
+                    <th class="px-4 py-2">Alasan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($presensi as $index => $item)
+                <tr class="border-b">
+                    <td class=" py-2">{{ $index + 1 }}</td>
+                    <td class="px-4 py-2">{{ $item->created_at->format('d M Y') }}</td>
+                    <td class="px-4 py-2"> <span class="btn btn-sm bg-green-400 text-gray-950 my-1">
+                            {{ $item->clock_in ? $item->clock_in->format('H:i:s') : '-' }} </span>
+                        <span class="btn btn-sm  bg-button text-white">{{ $item->clock_out ?
+                            $item->clock_out->format('H:i:s') : '-' }}</span>
+                    </td>
+                    <td class="px-4 py-2">{{ $item->status }}</td>
+                    <td class="px-4 py-2">{{ $item->catatan }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div> --}}
 
 
 

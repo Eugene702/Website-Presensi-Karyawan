@@ -123,8 +123,8 @@ $register = function () {
 
         <div class="flex items-center justify-end mt-4">
             {{-- Tombol dengan warna hijau tua --}}
-            <x-primary-button class="bg-green-800 hover:bg-green-700 w-full">
-                <p class="mx-auto text-lime-800 text-lg  ">Daftar</p>
+            <x-primary-button class="bg-button w-full">
+                <p class="mx-auto text-white my-2 font-extrabold  ">Daftar</p>
             </x-primary-button>
         </div>
     </form>
