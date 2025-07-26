@@ -13,11 +13,23 @@ form(LoginForm::class);
 $login = function () {
     $this->validate();
 
+ // Langkah 1: Otentikasi pengguna (setelah ini, user sudah login)
     $this->form->authenticate();
 
+    // Langkah 2: Regenerate session untuk keamanan
     Session::regenerate();
 
-    $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+    // Langkah 3: Ambil data user yang baru saja login
+    $user = Auth::user();
+
+    // Langkah 4: Tentukan URL tujuan berdasarkan role
+    $url = match ($user->role) {
+        'admin' => route('admin.dashboard', absolute: false),
+        default => route('dashboard', absolute: false), // Untuk 'mahasiswa' dan role lainnya
+    };
+
+    // Langkah 5: Redirect ke tujuan yang benar
+    return $this->redirectIntended(default: $url);
 };
 
 ?>
