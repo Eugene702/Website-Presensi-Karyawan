@@ -177,17 +177,31 @@ class PresensiController extends Controller
     return redirect()->route('dashboard')->with('success', 'Laporan izin berhasil dikirim.');
 }
 
-     public function generateRekapPDF()
+public function generateRekapPDF()
     {
-        // 1. Ambil data yang ingin diekspor
-        // Pastikan query ini sama dengan yang menampilkan data di dashboard
-        $presensi = Presensi::with('user')->orderBy('created_at', 'desc')->get();
+        // 1. Ambil ID dan nama pengguna yang sedang login
+        $userId = Auth::id();
+        $user = Auth::user();
 
-        // 2. Load view PDF dan teruskan datanya
-        // Kita akan membuat view 'presensi_rekap_pdf.blade.php' di langkah berikutnya
-        $pdf = PDF::loadView('presensi_rekap_pdf', ['presensi' => $presensi]);
+        // 2. Ambil SEMUA data presensi HANYA untuk user ini
+        $presensi = Presensi::where('user_id', $userId)
+                            ->with('user')
+                            ->latest()
+                            ->get();
 
-        // 3. Download file PDF dengan nama tertentu
-        return $pdf->download('rekap-presensi-' . date('Y-m-d') . '.pdf');
-    }
+        // 3. Siapkan data untuk dikirim ke view PDF
+        $data = [
+            'presensi' => $presensi,
+            'titleDate' => 'Rekap Semua Periode' // Judul untuk PDF
+        ];
+
+        // 4. Load view PDF dengan data yang sudah difilter
+        $pdf = PDF::loadView('presensi_rekap_pdf', $data);
+
+        // 5. Buat nama file yang dipersonalisasi
+        $fileName = 'rekap-presensi-' . str_replace(' ', '-', strtolower($user->name)) . '-' . date('Y-m-d') . '.pdf';
+
+        // 6. Download PDF
+        return $pdf->download($fileName);
+    }   
 }
