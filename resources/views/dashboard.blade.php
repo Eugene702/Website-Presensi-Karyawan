@@ -278,6 +278,8 @@
                     </form>
                 </div>
 
+
+                {{-- izin modal --}}
                 <div class="text-center mt-4">
                     <p>Tidak Hadir? <button onclick="my_modal_4.showModal()"> <span
                                 class="bg-custom-gradient font-semibold">Klik Disini</span></button></p>
@@ -285,20 +287,33 @@
                 <dialog id="my_modal_4" class="modal bg-gray-500 bg-opacity-50 backdrop-blur-md">
                     <div class="modal-box w-11/12 max-w-5xl bg-white">
                         <h2 class="text-2xl font-bold mb-4">Lapor Presensi Forum Human Capital Indonesia</h2>
-                        <form method="POST" action="{{ route('presensi.izinSubmit') }}">
+
+                        {{-- PENTING: Tambahkan enctype untuk upload file --}}
+                        <form method="POST" action="{{ route('presensi.izinSubmit') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-4">
                                 <p class="my-5">Form ini digunakan untuk melaporkan kehadiran tanpa check in</p>
                                 <label for="keterangan"
                                     class="block text-sm font-medium text-gray-700">Keterangan</label>
-                                <select name="keterangan" id="keterangan" class="mt-1 block w-full">
+                                <select name="keterangan" id="keterangan"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                                     <option value="Izin">Izin</option>
                                     <option value="Sakit">Sakit</option>
                                 </select>
                             </div>
+
+                            {{-- Tambahkan input file di sini --}}
+                            <div class="mb-4">
+                                <label for="foto_lokasi" class="block text-sm font-medium text-gray-700">Upload Foto
+                                    Bukti (Opsional)</label>
+                                <input type="file" name="foto_lokasi" id="foto_lokasi" accept="image/*"
+                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            </div>
+
                             <div class="mb-4">
                                 <label for="catatan" class="block text-sm font-medium text-gray-700">Catatan</label>
-                                <textarea name="catatan" id="catatan" rows="3" class="mt-1 block w-full"></textarea>
+                                <textarea name="catatan" id="catatan" rows="3"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
                             </div>
                             <div class="flex justify-between">
                                 <button
@@ -315,16 +330,34 @@
 
 
         <!-- Panel Kanan: Riwayat Presensi -->
-        <div class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md hidden md:block">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold">Riwayat Presensi</h2>
-        {{-- TOMBOL EXPORT PDF --}}
-        <a href="{{ route('presensi.rekap.pdf') }}"
-           class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-            <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
-            <span>Export ke PDF</span>
-        </a>
-    </div>            <table class="table-auto w-full text-left">
+        <div x-data="{ isImageModalOpen: false, modalImageUrl: '' }" class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md hidden md:block">
+
+            {{-- Letakkan kode ini setelah </table>, tapi sebelum </div> penutup utama --}}
+<div x-show="isImageModalOpen" 
+     @keydown.escape.window="isImageModalOpen = false"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 transition-opacity"
+     style="display: none;">
+
+    <div @click.away="isImageModalOpen = false" class="relative bg-white p-4 rounded-lg shadow-lg max-w-3xl max-h-[90vh]">
+        
+        <button @click="isImageModalOpen = false" class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold z-10">&times;</button>
+        
+        <img :src="modalImageUrl" alt="Tampilan Penuh" class="object-contain max-w-full max-h-[85vh]">
+    </div>
+</div>
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Riwayat Presensi</h2>
+                {{-- TOMBOL EXPORT PDF --}}
+                <a href="{{ route('presensi.rekap.pdf') }}"
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                    </svg>
+                    <span>Export ke PDF</span>
+                </a>
+            </div>
+            <table class="table-auto w-full text-left">
                 <thead>
                     <tr>
                         <th class="px-4 py-2">No</th>
@@ -342,14 +375,22 @@
                     @foreach ($presensi as $index => $item)
                         <tr class="border-b">
                             <td class="px-4 py-2">{{ $index + 1 }}</td>
-                     <td class="px-4 py-2">
-    @php
-        // Hapus 'public/' dari nama path jika ada
-        $fotoPath = $item->foto_lokasi ? str_replace('public/', '', $item->foto_lokasi) : null;
-    @endphp
-    <img src="{{ $fotoPath ? asset('storage/' . $fotoPath) : 'https://via.placeholder.com/60' }}"
-         alt="Foto Lokasi" class="rounded-full w-10 h-10 object-cover">
-</td>
+                            {{-- Di dalam @foreach loop --}}
+                            <td class="px-4 py-2">
+                                @php
+                                    $fotoPath = $item->foto_lokasi ? str_replace('public/', '', $item->foto_lokasi) : null;
+                                @endphp
+                                @if ($fotoPath)
+                                    {{-- Buat gambar bisa diklik --}}
+                                    <button type="button"
+                                        @click="isImageModalOpen = true; modalImageUrl = '{{ asset('storage/' . $fotoPath) }}'">
+                                        <img src="{{ asset('storage/' . $fotoPath) }}" alt="Foto Lokasi"
+                                            class="rounded-full w-10 h-10 object-cover cursor-pointer hover:opacity-80 transition">
+                                    </button>
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="px-4 py-2">{{ $item->user->name }}</td>
                             <td class="px-4 py-2">{{ $item->lokasi }}</td>
                             <td class="px-4 py-2">{{ $item->created_at->format('d M Y') }}</td>
@@ -365,7 +406,8 @@
         </div>
 
 
-        <div class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md  md:hidden">
+        <div 
+            class="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md  md:hidden">
             <h2 class="text-2xl font-bold mb-4">Riwayat Presensi</h2>
             <table class="table-auto w-full text-left">
                 <thead>

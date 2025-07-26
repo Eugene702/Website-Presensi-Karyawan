@@ -136,31 +136,46 @@ class PresensiController extends Controller
         return view('presensi.izin');
     }
 
-    public function izinSubmit(Request $request)
-    {
-        // Cek apakah sudah ada presensi atau izin hari ini
-        $existingPresensi = Presensi::where('user_id', Auth::id())
-            ->whereDate('created_at', Carbon::today('Asia/Jakarta'))
-            ->first();
+   public function izinSubmit(Request $request)
+{
+    // Cek apakah sudah ada presensi atau izin hari ini (Logika ini sudah benar)
+    $existingPresensi = Presensi::where('user_id', Auth::id())
+        ->whereDate('created_at', Carbon::today('Asia/Jakarta'))
+        ->first();
 
-        if ($existingPresensi) {
-            // Jika sudah ada presensi atau izin hari ini, tolak izin baru
-            return redirect()->route('dashboard')->with('error', 'Anda sudah melakukan presensi atau izin hari ini.');
-        }
-
-        $request->validate([
-            'keterangan' => 'required|string',
-            'catatan' => 'nullable|string',
-        ]);
-
-        $presensi = new Presensi();
-        $presensi->user_id = Auth::id();
-        $presensi->status = $request->keterangan;
-        $presensi->catatan = $request->catatan;
-        $presensi->save();
-
-        return redirect()->route('dashboard');
+    if ($existingPresensi) {
+        return redirect()->route('dashboard')->with('error', 'Anda sudah melakukan presensi atau izin hari ini.');
     }
+
+    // 1. Tambahkan validasi untuk file foto
+    $request->validate([
+        'keterangan' => 'required|string',
+        'foto_lokasi' => 'nullable|image|max:2048', // Opsional, harus gambar, maks 2MB
+        'catatan' => 'nullable|string',
+    ]);
+
+    // 2. Siapkan data untuk disimpan
+    $dataToSave = [
+        'user_id' => Auth::id(),
+        'status' => $request->keterangan,
+        'catatan' => $request->catatan,
+        // Set default value untuk kolom lain agar tidak null
+        'clock_in' => null, 
+    ];
+
+    // 3. Cek jika ada file foto yang di-upload
+    if ($request->hasFile('foto_lokasi')) {
+        // Simpan foto ke folder 'izin_photos' di dalam 'storage/app/public'
+        // dan dapatkan path-nya untuk disimpan di database
+        $path = $request->file('foto_lokasi')->store('izin_photos', 'public');
+        $dataToSave['foto_lokasi'] = $path;
+    }
+
+    // 4. Simpan semua data ke database menggunakan create
+    Presensi::create($dataToSave);
+
+    return redirect()->route('dashboard')->with('success', 'Laporan izin berhasil dikirim.');
+}
 
      public function generateRekapPDF()
     {
