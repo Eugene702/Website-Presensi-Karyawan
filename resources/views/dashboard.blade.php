@@ -43,7 +43,7 @@
         <div class="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
             <div class="text-center">
                 <button onclick="my_modal_1.showModal()">
-                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'https://via.placeholder.com/60' }}"
+                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'https://static.vecteezy.com/system/resources/previews/033/541/875/original/user-thick-line-filled-dark-colors-free-vector.jpg' }}"
                         alt="Avatar" class="rounded-full w-16 h-16">
                 </button>
                 <dialog id="my_modal_1" class="modal bg-gray-500 bg-opacity-50 backdrop-blur-md">
