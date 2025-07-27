@@ -168,7 +168,9 @@
                                                 Selfie</label>
                                             <input type="file" name="foto_lokasi" id="foto" accept="image/*"
                                                 capture="user" required
-                                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                onchange="if(this.files[0] && this.files[0].size > 2 * 1024 * 1024){ alert('Ukuran gambar maksimal 2MB!'); this.value=''; }">
+                                            <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG, Max: 2MB</p>
                                         </div>
 
                                         <div>
@@ -231,12 +233,30 @@
                                         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
                                         const data = await response.json();
 
-                                        // Anda bisa pilih data yang lebih spesifik
-                                        const city = data.address.city || data.address.town || data.address.village;
-                                        const suburb = data.address.suburb || data.address.county;
+                                        // Cek seluruh isi data untuk debugging jika perlu
+                                        // console.log(data.address);
 
-                                        this.locationName = `${suburb}, ${city}`;
-                                        this.locationStatus = `📍 Lokasi Anda: ${this.locationName}`;
+                                        // --- PERUBAIKAN DI SINI ---
+                                        // Prioritaskan field yang paling mungkin berisi nama kecamatan
+                                        const kecamatan = data.address.suburb ||
+                                            data.address.city_district ||
+                                            data.address.quarter ||
+                                            data.address.neighbourhood ||
+                                            data.address.county;
+
+                                        const city = data.address.city || data.address.town || data.address.village;
+
+                                        // Gabungkan dengan rapi, hindari "undefined, Bandar Lampung"
+                                        this.locationName = [kecamatan, city].filter(Boolean).join(', ');
+
+                                        if (this.locationName) {
+                                            this.locationStatus = `📍 Lokasi Anda: ${this.locationName}`;
+                                        } else {
+                                            this.locationStatus = 'Nama lokasi tidak ditemukan.';
+                                        }
+
+                                        console.log(" longitude:", lon, "latitude:", lat);
+
                                     } catch (error) {
                                         this.locationStatus = 'Gagal mendapatkan nama lokasi.';
                                         console.error("Error reverse geocoding:", error);
@@ -328,8 +348,7 @@
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
                             </div>
                             <div class="flex justify-between">
-                                <button
-                                    class="btn px-4 py-2 rounded bg-sky-600 border-none text-white font-bold"
+                                <button class="btn px-4 py-2 rounded bg-sky-600 border-none text-white font-bold"
                                     type="button" onclick="my_modal_4.close()">Batal</button>
                                 <button type="submit"
                                     class="bg-lime-800 btn text-white px-4 py-2 rounded border-none hover:bg-pink-300">Submit</button>

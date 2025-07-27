@@ -39,7 +39,7 @@ $login = function () {
             <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
         </a>
     </div>
-    <P class="text-lime-800 text-xl text-center font-extrabold my-5 mb-10"> Selangkah Lebih Dekat Dengan Suksesmu</P>
+    <P class="text-blue-700 text-xl text-center font-extrabold my-5 mb-10"> Dari hati mengabdi bersama Arthacita membangun negeri</P>
 
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -75,6 +75,6 @@ $login = function () {
             </x-primary-button>
         </div>
     </form>
-    <p class="text-center mt-3 text-black">Belum ada akun ? <a href="{{ route('register') }}" class="text-lime-800 text-lg font-bold"> Daftar disini <span class="hidden">{{ __('Register') }}</span></a></p>
+    <p class="text-center mt-3 text-black">Belum ada akun ? <a href="{{ route('register') }}" class="text-blue-700 text-lg font-bold"> Daftar disini <span class="hidden">{{ __('Register') }}</span></a></p>
 
 </div>

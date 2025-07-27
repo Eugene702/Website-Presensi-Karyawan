@@ -65,9 +65,9 @@ $register = function () {
     <div class="flex justify-center">
         {{-- Anda bisa menambahkan logo di sini jika perlu --}}
     </div>
-    
-    {{-- Judul dengan warna hijau tua --}}
-    <p class="text-green-800 text-2xl text-center font-extrabold my-5 mb-10">
+
+    {{-- Judul dengan warna biru --}}
+    <p class="text-blue-700 text-2xl text-center font-extrabold my-5 mb-10">
         KKN Bermanfaat
     </p>
 
@@ -132,7 +132,7 @@ $register = function () {
     {{-- Link "Masuk" dengan warna hijau tua --}}
     <p class="text-center mt-3 text-black">
         Sudah ada akun ? 
-        <a href="{{ route('login') }}" class="text-green-800 hover:text-green-700 font-semibold">
+        <a href="{{ route('login') }}" class="text-blue-700 hover:text-blue-800 font-semibold">
             Masuk
         </a>
     </p>
